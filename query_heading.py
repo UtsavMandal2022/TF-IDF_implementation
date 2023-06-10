@@ -89,4 +89,4 @@ with open('Qdata/q_index.txt','r') as f:
 
 potential_docs = get_potential_docs(query)
 for key in potential_docs:
-    print("Document: ",docs[int(key)],links[int(key)],"Score: ", potential_docs[key])
+    print("Document: ",key,docs[int(key)],links[int(key)],"Score: ", potential_docs[key])
