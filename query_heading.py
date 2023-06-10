@@ -1,5 +1,7 @@
 import math
 
+# Utsav Mandal
+
 def load_vocab():
     vocab = {}
     with open('vocab.txt', 'r') as f:
