@@ -1,3 +1,5 @@
+import re
+
 # Utsav Mandal
 
 with open('Qdata/output_headings.txt','r') as f:
@@ -11,38 +13,24 @@ def preprocess(document_text):
     terms = [term.lower() for term in document_text.strip().split()[1:]]
     return terms
 
-vocab={}
 docs=[]
 
-for line in lines:
+def extract_words_from_document(add):
+    # Remove all non-alphabetic characters except whitespaces
+    with open(add,'r') as f:
+        document=f.read()
+    clean_text = re.sub(r'[^a-zA-Z\s]', '', document)
+    
+    # Split the text into individual words
+    words =  [term.lower() for term in clean_text.split()]
+    
+    return words
+
+for ind,line in enumerate(lines):
     doc = preprocess(line)
+    words = extract_words_from_document('Qdata/q'+str(ind+1)+"/"+str(ind+1)+'.txt')
+    doc.extend(words)
     docs.append(doc)
-    for term in doc:
-        if term not in vocab:
-            vocab[term]=1
-        else:
-            vocab[term]+=1
-
-# print(len(docs))
-# print(docs[2156])
-# print(len(vocab))
-# print(vocab)
-
-vocab = dict(sorted(vocab.items(), key=lambda item: item[1], reverse=True))
-
-with open ('vocab.txt','w') as f:
-    for key in vocab:
-        f.write(key+'\n')
-
-with open ('idf-values.txt','w') as f:
-    for key in vocab:
-        f.write(str(vocab[key])+'\n')
-
-with open ('docs.txt','w') as f:
-    for doc in docs:
-        for term in doc:
-            f.write(term+' ')
-        f.write('\n')
 
 inv_index={}
 
@@ -52,6 +40,19 @@ for ind,doc in enumerate(docs):
             inv_index[term]=[ind]
         else:
             inv_index[term].append(ind)
+
+print(len(docs))
+print(len(inv_index))
+# print(len(set(inv_index['the'])))
+# print(len(inv_index['the']))
+# print(len(set(inv_index['of'])))
+# print(len(inv_index['of']))
+
+with open ('docs.txt','w') as f:
+    for doc in docs:
+        for term in doc:
+            f.write(term+' ')
+        f.write('\n')
 
 with open ('inv-index.txt','w') as f:
     for key in inv_index:

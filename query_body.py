@@ -2,18 +2,6 @@ import math
 
 # Utsav Mandal
 
-def load_vocab():
-    vocab = {}
-    with open('vocab.txt', 'r') as f:
-        lines = f.readlines()
-    with open ('idf-values.txt','r') as f:
-        idfs = f.readlines()
-
-    for (line, idf) in zip(lines, idfs):   
-        vocab[line.strip()] = int(idf.strip())
-
-    return vocab
-
 def load_docs():
     docs = []
     with open('docs.txt', 'r') as f:
@@ -33,10 +21,8 @@ def load_inv_index():
     print("Inv index size: ",len(inv_index))
     return inv_index
 
-vocab={}
 docs=[]
 inv_index={}
-vocab = load_vocab()
 docs = load_docs()
 inv_index = load_inv_index()
 
@@ -54,15 +40,15 @@ def get_tf(term):
     return tf
 
 def get_idf(term):
-    if term in vocab:
-        return math.log(len(docs)/vocab[term])
+    if term in inv_index:
+        return math.log(len(docs)/len(set(inv_index[term])))
     else:
         return 0
     
 def get_potential_docs(query):
     potential_docs = {}
     for term in query:
-        if term not in vocab:
+        if term not in inv_index:
             continue
         tf_val=get_tf(term)
         idf_val=get_idf(term)
@@ -89,6 +75,11 @@ with open('Qdata/q_index.txt','r') as f:
     links=f.readlines()
 # print(len(links))
 
+title=[]
+with open('Qdata/output_headings.txt','r') as f:
+    title=f.readlines()
+# print(len(title))
+
 potential_docs = get_potential_docs(query)
 for key in potential_docs:
-    print("Document: ",key,docs[int(key)],links[int(key)],"Score: ", potential_docs[key])
+    print("Document: ",int(key)+1,title[int(key)],links[int(key)],"Score: ", potential_docs[key])
