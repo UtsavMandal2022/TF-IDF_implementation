@@ -7,4 +7,4 @@ Link to body branch -> https://github.com/UtsavMandal2022/TF-IDF_implementation/
 
 How to run the code locally:
 
-Run the query_body.py
+Run the query_body.py (body) / query_heading.py (main)
